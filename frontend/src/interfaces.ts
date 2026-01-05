@@ -1,0 +1,33 @@
+export interface User {
+  userId: string;
+  login: string;
+  fullname: string;
+  isonline: boolean;
+  roles: string[];
+};
+  
+export interface Message {
+  msgId: string;
+  chatId: string;
+  userId: string;
+  datetime: Date;
+  text: string;
+};
+  
+
+export interface ChatUsers {
+  chatId: string;
+  userIds: string[];
+  name: string;
+};
+
+export interface Role {
+  role: string;
+  claims: string[];
+}
+
+export const CLAIMS = {
+  SEND_MSG: "sendMessage",
+  CREATE_CHAT: "createChat",
+  MANAGE_USERS: "manageUsers",
+};

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: chatappjn
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://barry75:abc123@barryonweb.com:27017/chatapp_dev}
+      database: ${MONGO_DB:chatapp_dev}    
+server:
+  port: 8081
+websocket:
+  timeout-mins: 20
+  check-interval-sec: 45
+useridle:
+  timeout-mins: 10
+  check-interval-sec: 45
+
+  

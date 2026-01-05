@@ -1,0 +1,92 @@
+package chatappjn.Config;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import chatappjn.Common.Endpoints;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class JwtValidator extends OncePerRequestFilter {
+  @Autowired
+  private Endpoints endpoints;
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  FilterChain filterChain)
+          throws ServletException, IOException {  
+
+    String headerSectionAuth = request.getHeader("Authorization");
+
+    String path = request.getRequestURI();
+    // White list - Skip JWT validation if path starts with any public endpoint
+    if (endpoints.getPublicEndpoints().stream().anyMatch(path::startsWith)) {
+        filterChain.doFilter(request, response);
+        return;
+    }
+
+    if (headerSectionAuth != null && headerSectionAuth.startsWith("Bearer ")) {
+      String accessJWT = headerSectionAuth.substring("Bearer ".length()); //remove prefix
+      try { // Validate the JWT
+        Claims claims = Jwts.parserBuilder()
+          .setSigningKey(JwtBuilder.getSecretKey())  
+          .build()
+          .parseClaimsJws(accessJWT)
+          .getBody();
+
+        // extract fields added in JwtBuilder::generateToken
+        String username = claims.getSubject();
+        String userId = claims.get("userId", String.class);
+        List<String> roles = claims.get("roles", List.class);
+        List<String> userClaims = claims.get("claims", List.class);
+        // Store them into request attributes
+        request.setAttribute("username", username);
+        request.setAttribute("userId", userId);
+        request.setAttribute("roles", roles);
+        request.setAttribute("claims", userClaims);
+
+        // Set Spring Security Authentication - tells Spring Security that the request is authenticated
+        UsernamePasswordAuthenticationToken auth =
+                new UsernamePasswordAuthenticationToken(username, null, List.of());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+      } 
+      catch (Exception e) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        Map<String, Object> error = Map.of(
+            "acknowledged", false,
+            "error", "Invalid or expired token"
+        );
+        response.getWriter().write(new ObjectMapper().writeValueAsString(error));            
+        return;
+      }
+    } 
+    else { // missing Bearer in Authorization header section
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.setContentType("application/json");
+      Map<String, Object> error = Map.of(
+          "acknowledged", false,
+          "error", "Missing Authorization header"
+      );
+      response.getWriter().write(new ObjectMapper().writeValueAsString(error));
+      return;
+    }
+    filterChain.doFilter(request, response);
+  }
+}
