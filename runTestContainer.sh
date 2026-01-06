@@ -1,15 +1,22 @@
 #!/bin/bash
 set -e
 
-PROJECT_NAME="chatapp-test"
-COMPOSE_FILE="docker-compose.test.yml"
+# Stop and remove any existing container
+docker rm -f chatapp-backend-test >/dev/null 2>&1 || true
 
-echo "Stopping and removing container and network..."
-docker compose -f $COMPOSE_FILE -p $PROJECT_NAME down --remove-orphans
+# Build Docker image from Dockerfile
+docker build -t chatapp-backend-test .
 
-echo "Building image from scratch..."
-docker compose -f $COMPOSE_FILE -p $PROJECT_NAME build --no-cache
+# Run container
+docker run -d \
+  --name chatapp-backend-test \
+  -p 8085:8080 \
+  -e MONGO_URI="mongodb://barry75:abc123@barryonweb.com:27017/chatapp_test" \
+  -e MONGO_DB="chatapp_test" \
+  -e SPRING_PROFILES_ACTIVE="prod" \
+  -e JAVA_OPTS="-Xms256m -Xmx512m" \
+  -e SPRING_SERVER_PORT=8080 \
+  --restart unless-stopped \
+  chatapp-backend-test
 
-echo "Starting container..."
-docker compose -f $COMPOSE_FILE -p $PROJECT_NAME up -d
-
+echo "Container 'chatapp-backend-test' is running on http://localhost:8085"

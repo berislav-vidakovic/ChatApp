@@ -74,12 +74,12 @@ This project is designed as a **portfolio project** to showcase real-world engin
 
 ```text
 /
-├── backend/                  # Spring Boot backend
-├── frontend/                 # React frontend
-├── docker-compose.test.yml   # Docker Compose (test env)
-├── runTestContainer.sh       # Helper script for container recreation
-├── chatapp-dev.barryonweb.com# NGINX config example
-└── README.md
+├── backend/                    # Spring Boot backend
+├── frontend/                   # React frontend
+├── runTestContainer.sh         # Helper script for container recreation
+├── chatapp-test.barryonweb.com # NGINX config for Test environment
+├── chatapp-dev.barryonweb.com  # NGINX config for Dev environment
+└── Readme.md
 ```
 
 ---
