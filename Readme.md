@@ -42,7 +42,7 @@ This project is designed as a **portfolio project** to showcase real-world engin
 - JWT-based authentication
 - Role-Based Access Control (RBAC)
 - MongoDB persistence
-- Docker & Docker Compose support
+- Docker support
 - NGINX reverse proxy configuration
 - GitHub Actions CI/CD pipelines
 
@@ -63,7 +63,7 @@ This project is designed as a **portfolio project** to showcase real-world engin
 - Vite
 
 ### Infrastructure & DevOps
-- Docker & Docker Compose
+- Docker containerization
 - NGINX
 - GitHub Actions (CI/CD)
 - Linux (systemd, SSH)
@@ -113,25 +113,13 @@ npm run build
 
 ## Docker (Test Environment)
 
-### Build Image
+### Run script to Build Image and run Docker container
 
 ```bash
-docker build -t chatapp-backend-test .
+./runTestContainer.sh
 ```
 
-### Run Container with Docker Compose
-
-```bash
-docker compose -f docker-compose.test.yml up -d --remove-orphans
-```
-
-### Stop and Remove
-
-```bash
-docker compose -f docker-compose.test.yml down --remove-orphans
-```
-
-There is a <a href="docs/Details.md">separate document</a> with more details on Docker.
+There is a <a href="docs/Details.md">separate document</a> with more details on Docker containerization.
 
 ---
 

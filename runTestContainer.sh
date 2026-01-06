@@ -19,4 +19,4 @@ docker run -d \
   --restart unless-stopped \
   chatapp-backend-test
 
-echo "Container 'chatapp-backend-test' is running on http://localhost:8085"
+echo "Container 'chatapp-backend-test' is running on Port 8085"

@@ -22,42 +22,31 @@
 - Add Docker file to backend
   - copy build output file to app.jar
   - internal Port 8080
-- Add docker-compose.yml to backend 
-  - map Port 8085:8080 and specify DB details
-  - Override Port from application.yml with  --server.port=8080
-  - Build & run container on server
-      ```yaml
-      services:
-        games-backend-test:
-          build: .
-          container_name: games-backend-test
-          ports:
-            - "8084:8080"
-          environment:
-            SPRING_DATASOURCE_URL: jdbc:mysql://barryonweb.com:3306/games_test
-            SPRING_DATASOURCE_USERNAME: barry75
-            SPRING_DATASOURCE_PASSWORD: abc123
-            SPRING_PROFILES_ACTIVE: prod
-            JAVA_OPTS: "-Xms256m -Xmx512m"
-            SPRING_SERVER_PORT: 8080
-          command: ["java", "-jar", "app.jar", "--server.port=8080"]
-          restart: unless-stopped
-      ```
-  - Run
-    ```bash
-    docker compose -f docker-compose.test.yml up -d
-    ```
-  - Restart container
-    ```bash
-    docker compose -f docker-compose.test.yml down
-    docker compose -f docker-compose.test.yml build --no-cache
-    docker compose -f docker-compose.test.yml up -d
-    ```
-  - Test
-    ```bash
-    curl http://localhost:8085/api/ping
-    curl http://localhost:8085/api/pingdb
-    ```
+- Create bash script to build Docker image and run docker container
+  ```bash
+  #!/bin/bash
+  set -e
+
+  # Stop and remove any existing container
+  docker rm -f chatapp-backend-test >/dev/null 2>&1 || true
+
+  # Build Docker image from Dockerfile
+  docker build -t chatapp-backend-test .
+
+  # Run container
+  docker run -d \
+    --name chatapp-backend-test \
+    -p 8085:8080 \
+    -e MONGO_URI="mongodb://barry75:abc123@barryonweb.com:27017/chatapp_test" \
+    -e MONGO_DB="chatapp_test" \
+    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e JAVA_OPTS="-Xms256m -Xmx512m" \
+    -e SPRING_SERVER_PORT=8080 \
+    --restart unless-stopped \
+    chatapp-backend-test
+
+  echo "Container 'chatapp-backend-test' is running on Port 8085"
+  ```
 
 - Check environment variable within Docker container
   ```bash
@@ -89,17 +78,5 @@
   ```
 
 
-### 3. Deployment environment control
 
-- Create bash script to build Doker image and run docker container
-  - Build image
-    ```bash
-    docker build -t chatapp-backend-test .
-    ```
-  - Restart container
-    ```bash
-    docker compose -f docker-compose.test.yml down
-    docker compose -f docker-compose.test.yml build --no-cache
-    docker compose -f docker-compose.test.yml -p chatapp-test up -d
-    ```
 
