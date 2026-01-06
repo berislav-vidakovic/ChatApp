@@ -8,6 +8,17 @@ const currentEnv = import.meta.env.VITE_ENV as string;
 export let URL_BACKEND_HTTP = "";
 export let URL_BACKEND_WS = ""; 
 
+
+function getHttpUrl(): string {
+  const { protocol, hostname } = window.location;
+  return `${protocol}//${hostname}`;
+}
+
+function getWebSocketUrl(): string {
+  const WS_PROTOCOL = window.location.protocol === "https:" ? "wss" : "ws";
+  return `${WS_PROTOCOL}://${window.location.host}/websocket`;  
+}
+
 export async function reconnectApp(){
   console.log("Reconnecting...");
   window.location.reload();
@@ -22,6 +33,7 @@ export async function disconnectApp(
 }
 
 
+
 export async function loadConfig(
   setConfigLoaded:  Dispatch<SetStateAction<boolean>> ) {
     try {
@@ -32,8 +44,16 @@ export async function loadConfig(
         const config = await response.json();
         console.log('Loaded config:', config);
         console.log('*** Current running Environment:', currentEnv, '***');
-        URL_BACKEND_HTTP = config.urlBackend[currentEnv].HTTP;
-        URL_BACKEND_WS = config.urlBackend[currentEnv].WS;
+
+        if( currentEnv == "Development"){
+          URL_BACKEND_HTTP = config.urlBackend[currentEnv].HTTP;
+          URL_BACKEND_WS = config.urlBackend[currentEnv].WS;
+        }
+        else { // Production
+          URL_BACKEND_HTTP = getHttpUrl();
+          URL_BACKEND_WS = getWebSocketUrl();
+        }
+        
         console.log("URL_BACKEND_HTTP and URL_BACKEND_WS", URL_BACKEND_HTTP, URL_BACKEND_WS);
 
         setConfigLoaded(true); // Mark configuration as loaded
