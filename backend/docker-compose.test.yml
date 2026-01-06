@@ -1,0 +1,14 @@
+services:
+  chatapp-backend-test:
+    build: .
+    container_name: chatapp-backend-test
+    ports:
+      - "8085:8080"
+    environment:
+      MONGO_URI: mongodb://barry75:abc123@barryonweb.com:27017/chatapp_test
+      MONGO_DB: chatapp_test
+      SPRING_PROFILES_ACTIVE: prod
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_SERVER_PORT: 8080
+    command: ["java", "-jar", "app.jar", "--server.port=8080"]
+    restart: unless-stopped
