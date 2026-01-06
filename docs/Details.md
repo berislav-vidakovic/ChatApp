@@ -43,7 +43,8 @@
     -e JAVA_OPTS="-Xms256m -Xmx512m" \
     -e SPRING_SERVER_PORT=8080 \
     --restart unless-stopped \
-    chatapp-backend-test
+    chatapp-backend-test \
+    java -jar app.jar --server.port=8080
 
   echo "Container 'chatapp-backend-test' is running on Port 8085"
   ```
