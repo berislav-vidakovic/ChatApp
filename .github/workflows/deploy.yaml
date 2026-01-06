@@ -70,8 +70,7 @@ jobs:
       - name: Restart backend service
         run: |
           scp -P $SSH_PORT backend/chatappjn.service barry75@barryonweb.com:/etc/systemd/system/
-          ssh -p $SSH_PORT barry75@barryonweb.com "sudo systemctl daemon-reload && 
-            sudo systemctl restart chatappjn.service"
+          ssh -p $SSH_PORT barry75@barryonweb.com "sudo systemctl restart chatappjn.service"
 
       # See logs after restart
       - name: Show backend logs
