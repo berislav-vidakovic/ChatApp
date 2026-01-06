@@ -1,103 +1,197 @@
-## Parameterize DB connection to MongodB
-  ```yaml
-  data:
-    mongodb:
-      uri: ${MONGO_URI:mongodb://barry75:abc123@barryonweb.com:27017/chatappdb}
-      database: ${MONGO_DB:chatappdb}
-  ```
+# ChatApp
 
-## Backup and restore MongoDB database (copy to existing db with user created)
-  ```bash
-  mongodump --uri="mongodb://barry75:abc123@localhost:27017/chatappdb" --out=./chatappdb.bak
-  db.dropUser("barry75");
-  mongorestore --uri="mongodb://barry75:abc123@localhost:27017/chatapp_test" ./chatappdb.bak/chatappdb
-  ```
-
-## Setup Test environment in Docker container
-
-### 1. Containerize backend 
-
-- Add Docker file to backend
-  - copy build output file to app.jar
-  - internal Port 8080
-- Add docker-compose.yml to backend 
-  - map Port 8085:8080 and specify DB details
-  - Override Port from application.yml with  --server.port=8080
-  - Build & run container on server
-      ```yaml
-      services:
-        games-backend-test:
-          build: .
-          container_name: games-backend-test
-          ports:
-            - "8084:8080"
-          environment:
-            SPRING_DATASOURCE_URL: jdbc:mysql://barryonweb.com:3306/games_test
-            SPRING_DATASOURCE_USERNAME: barry75
-            SPRING_DATASOURCE_PASSWORD: abc123
-            SPRING_PROFILES_ACTIVE: prod
-            JAVA_OPTS: "-Xms256m -Xmx512m"
-            SPRING_SERVER_PORT: 8080
-          command: ["java", "-jar", "app.jar", "--server.port=8080"]
-          restart: unless-stopped
-      ```
-  - Run
-    ```bash
-    docker compose -f docker-compose.test.yml up -d
-    ```
-  - Restart container
-    ```bash
-    docker compose -f docker-compose.test.yml down
-    docker compose -f docker-compose.test.yml build --no-cache
-    docker compose -f docker-compose.test.yml up -d
-    ```
-  - Test
-    ```bash
-    curl http://localhost:8085/api/ping
-    curl http://localhost:8085/api/pingdb
-    ```
-
-- Check environment variable within Docker container
-  ```bash
-  docker exec -it chatapp-backend-test env | grep MONGO
-  ```
-
-### 2. Backend routing setup - Nginx config for http
-
-- reuse dev config file and modify
-  - remove SSL section
-  - update server name 
-  - update Port to 8085
-- Enable Nginx config site
-- Test
-  ```bash
-  curl http://chatapp-test.barryonweb.com/api/ping
-  curl http://chatapp-test.barryonweb.com/api/pingdb
-  ```
-
-- Enable HTTPS
-  ```bash
-  sudo certbot --nginx -d chatapp-test.barryonweb.com
-  ```
-
-- Test
-  ```bash
-  curl https://chatapp-test.barryonweb.com/api/ping
-  curl https://chatapp-test.barryonweb.com/api/pingdb
-  ```
+**ChatApp** is a full-stack real-time messaging application built with **React**, **Spring Boot**, and **MongoDB**.  
+It demonstrates modern backend and frontend development practices including REST APIs, WebSockets, JWT authentication, Docker-based deployment, and CI/CD automation.
 
 
-### 3. Deployment environment control
+<div style="margin-bottom: 12px;">
+<img src = "docs/images/ts.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/react.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/rest.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/java.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/spring1.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/mongodb.png" style="margin-right: 15px;" /> 
+<img src = "docs/images/CI-CD.png" style="margin-right: 15px;" /> 
+</div>
 
-- Create bash script to build Doker image and run docker container
-  - Build image
-    ```bash
-    docker build -t chatapp-backend-test .
-    ```
-  - Restart container
-    ```bash
-    docker compose -f docker-compose.test.yml down
-    docker compose -f docker-compose.test.yml build --no-cache
-    docker compose -f docker-compose.test.yml -p chatapp-test up -d
-    ```
 
+This project is designed as a **portfolio project** to showcase real-world engineering skills and production-ready architecture.
+
+---
+
+## 📑 Table of Contents
+
+- [🚀 Features](#features)
+- [🧰 Tech Stack](#tech-stack)
+- [📁 Project Structure](#project-structure)
+- [🛠️ Local Development](#local-development)
+- [🐳 Docker (Test Environment)](#docker-test-environment)
+- [⚙️ Environment Variables](#environment-variables)
+- [🌐 NGINX Reverse Proxy](#nginx-reverse-proxy)
+- [🔁 CI/CD](#cicd)
+- [🎯 Skills demonstrated](#skills-demonstrated)
+- [👨‍💻 Contact](#contact)
+- [📄 License](#license)
+
+---
+
+## Features
+
+- Real-time messaging using **WebSockets**
+- RESTful API for users, chats, and messages
+- JWT-based authentication
+- Role-Based Access Control (RBAC)
+- MongoDB persistence
+- Docker & Docker Compose support
+- NGINX reverse proxy configuration
+- GitHub Actions CI/CD pipelines
+
+---
+
+## Tech Stack
+
+### Backend
+- Java 21
+- Spring Boot
+- Spring Web / WebSocket
+- MongoDB (more details in  <a href="docs/Details.md">separate document</a> )
+- JWT Authentication
+
+### Frontend
+- React
+- TypeScript
+- Vite
+
+### Infrastructure & DevOps
+- Docker & Docker Compose
+- NGINX
+- GitHub Actions (CI/CD)
+- Linux (systemd, SSH)
+
+---
+
+## Project Structure
+
+```text
+/
+├── backend/                  # Spring Boot backend
+├── frontend/                 # React frontend
+├── docker-compose.test.yml   # Docker Compose (test env)
+├── runTestContainer.sh       # Helper script for container recreation
+├── chatapp-dev.barryonweb.com# NGINX config example
+└── README.md
+```
+
+---
+
+## Local Development
+
+### Backend
+
+```bash
+cd backend
+mvn clean package -DskipTests
+java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
+```
+
+Default backend port:
+```
+http://localhost:8081
+```
+
+---
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+---
+
+## Docker (Test Environment)
+
+### Build Image
+
+```bash
+docker build -t chatapp-backend-test .
+```
+
+### Run Container with Docker Compose
+
+```bash
+docker compose -f docker-compose.test.yml up -d --remove-orphans
+```
+
+### Stop and Remove
+
+```bash
+docker compose -f docker-compose.test.yml down --remove-orphans
+```
+
+There is a <a href="docs/Details.md">separate document</a> with more details on Docker.
+
+---
+
+## Environment Variables
+
+```yaml
+MONGO_URI=mongodb://user:password@host:27017/chatapp_test
+MONGO_DB=chatapp_test
+SPRING_PROFILES_ACTIVE=prod
+JAVA_OPTS="-Xms256m -Xmx512m"
+SPRING_SERVER_PORT=8080
+```
+
+---
+
+## NGINX Reverse Proxy
+
+NGINX is used as a reverse proxy for REST APIs, WebSockets, and frontend assets.
+
+```nginx
+location /api/ {
+  proxy_pass http://127.0.0.1:8081;
+}
+
+location /websocket {
+  proxy_pass http://127.0.0.1:8081;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "Upgrade";
+}
+```
+
+---
+
+## CI/CD
+
+The project includes **GitHub Actions workflows** for automated build and deployment of backend and frontend services.
+
+---
+
+## Skills demonstrated
+
+- Demonstrate real-time application architecture
+- Secure authentication and authorization
+- Clean backend–frontend separation
+- Production-ready deployment
+- Dockerized environments
+- Infrastructure automation
+
+---
+
+## Contact
+
+**Berislav Vidakovic**  
+- GitHub: https://github.com/berislav-vidakovic 
+- Blog: https://barrytheanalyst.eu 
+- LinkedIn: https://www.linkedin.com/in/berislav-vidakovic/
+- E-mail: berislav.vidakovic@gmail.com
+---
+
+## License
+
+MIT License
