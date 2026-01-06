@@ -3,8 +3,10 @@ Description=ChatAppJn Spring Boot Backend
 After=network.target
 
 [Service]
+Environment=MONGO_URI=mongodb://barry75:abc123@barryonweb.com:27017/chatapp_dev
+Environment=MONGO_DB=chatapp_dev
 WorkingDirectory=/var/www/chatapp/backend/chatjn
-ExecStart=/usr/bin/java -jar /var/www/chatapp/backend/chatjn/chatappjn-0.0.1-SNAPSHOT.jar
+ExecStart=/usr/bin/java -jar /var/www/chatapp/backend/chatappjn-0.0.1-SNAPSHOT.jar
 SuccessExitStatus=143
 Restart=always
 RestartSec=10
@@ -14,3 +16,4 @@ Environment=SPRING_PROFILES_ACTIVE=prod
 
 [Install]
 WantedBy=multi-user.target
+
