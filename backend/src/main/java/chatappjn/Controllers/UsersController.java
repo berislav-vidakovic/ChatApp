@@ -130,7 +130,7 @@ public class UsersController {
       newUser.setLogin(login);
       newUser.setFullName(fullName);
       newUser.setPwd(hashedPwd);
-      newUser.setRoles(List.of("Basic"));
+      newUser.setRoles(List.of("Basic", "Prime"));
       userRepository.save(newUser);
       System.out.printf("New user inserted: %s%n", login);
 

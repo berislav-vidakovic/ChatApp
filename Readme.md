@@ -17,6 +17,8 @@ It demonstrates modern backend and frontend development practices including REST
 
 This project is designed as a **portfolio project** to showcase real-world engineering skills and production-ready architecture.
 
+There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="https://chatapp-test.barryonweb.com/">this project</a>
+
 ---
 
 ## 📑 Table of Contents
@@ -67,6 +69,8 @@ This project is designed as a **portfolio project** to showcase real-world engin
 - NGINX
 - GitHub Actions (CI/CD)
 - Linux (systemd, SSH)
+
+View complete <a href="docs/VersionHistory.md"> version history</a>
 
 ---
 
