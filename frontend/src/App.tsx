@@ -153,19 +153,12 @@ function App() {
     </button>
 
     {currentUserId && (
-      <div>
-        <div>
+    
+        <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }} >
           Logged in as: {usersRegistered.find(u=>u.userId==currentUserId)?.fullname}
         </div>
-        {/*
-        <div>Claims: {
-          <label>  
-            {currentUserClaims.join(', ')}
-          </label>
-        }
-        </div>  
-        */}
-      </div> )}
+      
+    )}
 
   </div>
 
@@ -196,12 +189,12 @@ function App() {
           onClick={() => setShowUsersRoles(true)}
           disabled={(currentUserId == null)}
         >
-          Users and Roles
+          User Roles
         </button>
       )}
   </div>
 
-</header>
+      </header>
 
 
       {(
