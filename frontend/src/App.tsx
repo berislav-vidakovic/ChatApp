@@ -18,8 +18,8 @@ import  { CLAIMS } from './interfaces.ts';
 import { sendGETRequest, sendPOSTRequest, setLoginDialogRef } from './services/restAPI.ts'
 import { StatusCodes } from 'http-status-codes'
 
-const VERSION_KEY: string ="Version";
-const VERSION_DELIMITER: string ="=";
+//const VERSION_KEY: string ="Version";
+//const VERSION_DELIMITER: string ="=";
 
 function App() {
   const [appVersion, setAppVersion] = useState<string>("");
