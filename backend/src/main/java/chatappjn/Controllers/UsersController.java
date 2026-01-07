@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import chatappjn.ChatappjnApplication;
 import chatappjn.Common.UserDTO;
 import chatappjn.Models.RefreshToken;
 import chatappjn.Models.Role;
@@ -89,7 +90,8 @@ public class UsersController {
         "id", clientId.toString(),
         "users", usersDTO,
         "techstack", techstack,
-        "roles", roles        
+        "roles", roles,
+        "appVersion", ChatappjnApplication.getVersion()        
     );
 
     return new ResponseEntity<>(response, HttpStatus.OK); // 200

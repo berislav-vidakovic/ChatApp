@@ -4,13 +4,14 @@ import type { Dispatch, SetStateAction } from "react";
 
 
 function ChatList(  { 
-    usersRegistered, chatusers, currentChatId, setCurrentChatId, isWsConnected, messages  }: { 
+    usersRegistered, chatusers, currentChatId, setCurrentChatId, isWsConnected, messages, appVersion  }: { 
     usersRegistered: User[];
     chatusers: ChatUsers[];    
     currentChatId: string | null;
     setCurrentChatId: Dispatch<SetStateAction<string | null>>;
     isWsConnected: boolean;
     messages: Message[];
+    appVersion: string;
   }
 ) {
 
@@ -37,6 +38,11 @@ function ChatList(  {
 
   return (
     <section className="chat-list">
+      <div>
+        <label>
+          ChatApp: {appVersion}
+        </label>
+      </div>
       <h2>Chats</h2>
       
       {(<ul>

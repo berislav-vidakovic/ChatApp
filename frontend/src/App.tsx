@@ -18,7 +18,11 @@ import  { CLAIMS } from './interfaces.ts';
 import { sendGETRequest, sendPOSTRequest, setLoginDialogRef } from './services/restAPI.ts'
 import { StatusCodes } from 'http-status-codes'
 
+const VERSION_KEY: string ="Version";
+const VERSION_DELIMITER: string ="=";
+
 function App() {
+  const [appVersion, setAppVersion] = useState<string>("");
   const [isConfigLoaded, setConfigLoaded] = useState<boolean>(false);
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [isWsConnected, setWsConnected] = useState<boolean>(false);
@@ -39,7 +43,8 @@ function App() {
   useEffect( () => { 
     loadConfig(setConfigLoaded); 
     setStateFunctionRefs(setInitialized, setUsersRegistered, setCurrentUserId, 
-      setCurrentChatId, setMessages, setChatUsers, setCurrentUserClaims, setAvailableRoles );
+      setCurrentChatId, setMessages, setChatUsers, setCurrentUserClaims, 
+      setAvailableRoles, setAppVersion );
     setLoginDialogRef(setShowLoginDialog);
   }, []);
 
@@ -208,6 +213,7 @@ function App() {
               setCurrentChatId = {setCurrentChatId}
               isWsConnected={isWsConnected}
               messages={messages}
+              appVersion={appVersion}
             />
           )}
 

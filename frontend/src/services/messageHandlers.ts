@@ -14,6 +14,7 @@ let setMessagesRef:  Dispatch<SetStateAction<Message[]>>;
 let setChatUsersRef:  Dispatch<SetStateAction<ChatUsers[]>>; 
 let setCurrentuserClaimsRef:  Dispatch<SetStateAction<string[]>>;
 let setAvailableRolesRef:  Dispatch<SetStateAction<Role[]>>;
+let setAppVersionRef:  Dispatch<SetStateAction<string>>;
 
 
 
@@ -25,7 +26,8 @@ export function setStateFunctionRefs(
   setMessages:  Dispatch<SetStateAction<Message[]>>,
   setChatUsers:  Dispatch<SetStateAction<ChatUsers[]>>,
   setCurrentuserClaims:  Dispatch<SetStateAction<string[]>>,
-  setAvailableRoles:  Dispatch<SetStateAction<Role[]>>
+  setAvailableRoles:  Dispatch<SetStateAction<Role[]>>,
+  setAppVersion:  Dispatch<SetStateAction<string>>
   
 ){
     setInitializedRef = setInitialized;
@@ -36,6 +38,7 @@ export function setStateFunctionRefs(
     setChatUsersRef = setChatUsers;
     setCurrentuserClaimsRef = setCurrentuserClaims; 
     setAvailableRolesRef = setAvailableRoles;
+    setAppVersionRef = setAppVersion;
 }
 
 export function handleInit( jsonResp: any ) {
@@ -68,8 +71,9 @@ export function handleGetUsers( jsonResp: any, status: number ) {
     setAvailableRolesRef(allRoles);
     console.log("Available Roles: ", allRoles );
 
-
+    const version = jsonResp.appVersion;
     // Update React state - ref. to setUsersRegistered defined in App.tsx
+    setAppVersionRef(version);
     setInitializedRef(true);
     setUsersRegisteredRef(mappedUsers);
   }
