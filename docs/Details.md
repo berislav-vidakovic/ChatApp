@@ -78,6 +78,21 @@
   curl https://chatapp-test.barryonweb.com/api/pingdb
   ```
 
+### 3. Containerize frontend
+
+- Add Dockerfile
+  ```docker
+  ```
+
+- Update Nginx config file 
+  - Old setup:
+    ```
+    Nginx → filesystem (/var/www/chatapp/frontend)
+    ```
+  - New setup:
+    ```
+    Nginx → frontend-test Docker container
+    ```
 
 
 
