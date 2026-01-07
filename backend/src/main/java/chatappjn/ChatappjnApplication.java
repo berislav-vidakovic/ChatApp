@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ChatappjnApplication {
-  private static String VERSION="v1.0.1";
+  private static String VERSION="v1.0.2";
   private static String VERSION_KEY="Version";
   private static String VERSION_DELIMITER="=";
 

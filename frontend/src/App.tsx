@@ -1,5 +1,6 @@
-import './App.css'
 import './style.css'
+import './style-mobile.css'
+
 import { useState, useEffect } from 'react'
 import { loadConfig, getAllUsers, reconnectApp, logoutUser } from './services/utils.ts'
 import { handleGetUsers, parseAndUpdateModel, setStateFunctionRefs } from './services/messageHandlers.ts'
