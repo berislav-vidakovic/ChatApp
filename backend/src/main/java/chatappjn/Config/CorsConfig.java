@@ -17,7 +17,8 @@ public class CorsConfig {
                 .allowedOrigins(
                   "http://localhost:5177", // Dev
                   "https://chatapp-dev.barryonweb.com", //Prod
-                  "https://chatapp-test.barryonweb.com" //Prod
+                  "https://chatapp-test.barryonweb.com",
+                  "https://chatapp-docker.barryonweb.com" 
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

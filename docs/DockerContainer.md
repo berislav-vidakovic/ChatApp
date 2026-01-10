@@ -74,41 +74,25 @@
 
 ## Backend
 
-Backend Docker image should:
-
-- Build Spring Boot app
-- Run it as a container
-- Accept config via environment variables
-- NOT rely on systemd
-- NOT rely on host-installed Java
-
-So Docker replaces:
-- Java install
-- systemd service
-- manual JAR handling
+- Add as allowed origin https://chatapp-docker.barryonweb.com to
+  - WebSocket Config
+  - Cors Config
 
 ## Nginx container responsibilities
 
-- Serve frontend static files (React build)
-- Reverse proxy API calls (/api) to backend container
-- Reverse proxy WebSocket connections (/websocket) to backend container
-- Terminate HTTPS for chatapp-docker.barryonweb.com
 
-```
-Internet
-   ↓
-Host Nginx (port 80)
-   ↓ proxy_pass
-Docker Nginx (frontend container)
-   ↓
-Spring Boot backend container
-   ↓
-MongoDB container
-```
+## Run Docker containers
+  ```docker
+  docker compose build
+  docker compose up -d
+  ```
 
-✔ Host nginx owns port 80  
-✔ Docker frontend is exposed internally (8090 → 80)  
-✔ Backend reachable through Docker network  
-✔ Mongo isolated in container volume  
-✔ API routing works through domain → nginx → docker → backend  
+## Test container with curl and wscat
+  ```bash
+  wscat -c ws://chatapp-docker.barryonweb.com/websocket/
+  ```
 
+## Enter Docker container shell
+  ```docker
+  docker exec -it chatapp-backend cat .env
+  ```
