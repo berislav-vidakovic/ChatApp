@@ -110,7 +110,7 @@ export async function sendGETRequest(
       endpoint: string, 
       handleResponse: (data: any, status: number) => void ): Promise<any> {
     const getUrl = `${URL_BACKEND_HTTP}/${endpoint}` + `?id=${sessionStorage.getItem("myID")}`;
-    //console.log("Sending GET: ", getUrl );
+    console.log("Sending GET to: ", getUrl );
     fetch(getUrl, { 
         method: "GET",
         headers: { 

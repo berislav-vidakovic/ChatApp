@@ -2,7 +2,7 @@ import './style.css'
 import './style-mobile.css'
 
 import { useState, useEffect } from 'react'
-import { loadConfig, getAllUsers, reconnectApp, logoutUser } from './services/utils.ts'
+import { getAllUsers, reconnectApp, logoutUser } from './services/utils.ts'
 import { handleGetUsers, parseAndUpdateModel, setStateFunctionRefs } from './services/messageHandlers.ts'
 import { connectWS } from './services/webSocket.ts'
 import { userHasClaim } from './services/rbac.ts'
@@ -24,7 +24,6 @@ import { StatusCodes } from 'http-status-codes'
 
 function App() {
   const [appVersion, setAppVersion] = useState<string>("");
-  const [isConfigLoaded, setConfigLoaded] = useState<boolean>(false);
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [isWsConnected, setWsConnected] = useState<boolean>(false);
   const [showLoginDialog, setShowLoginDialog] = useState<boolean>(false);
@@ -42,7 +41,6 @@ function App() {
 
   // Config - backend URL for HTTP and WS
   useEffect( () => { 
-    loadConfig(setConfigLoaded); 
     setStateFunctionRefs(setInitialized, setUsersRegistered, setCurrentUserId, 
       setCurrentChatId, setMessages, setChatUsers, setCurrentUserClaims, 
       setAvailableRoles, setAppVersion );
@@ -50,12 +48,10 @@ function App() {
   }, []);
 
   // GET Ping and pingdb 
-  useEffect( () => { if( isConfigLoaded) {
+  useEffect( () => { 
     sendGETRequest('api/ping', handlePingResponse);
     sendGETRequest('api/pingdb', handlePingDbResponse);    
-    } 
-    else console.log("Ping-Config not loaded yet");
-  }, [isConfigLoaded]);
+  }, []);
 
   function handlePingResponse( jsonResp: any ) {
     console.log("Response to GET PING: ", jsonResp );
@@ -65,23 +61,21 @@ function App() {
     console.log("Response to GET PINGDB: ", jsonResp );
   } 
   
-  // 1. isConfigLoaded
   // 2. isInitialized
   // 3. isWsConected
 
   // GET users /api/users/all
-  useEffect( () => { if( isConfigLoaded ) getAllUsers(
+  useEffect( () => { getAllUsers(
       handleGetUsers); 
-      else console.log("GET-Config not loaded yet");
-    }, [isConfigLoaded]);  
+    }, []);  
       
  
   // WS connect
-  useEffect( () => { if( isConfigLoaded && isInitialized ) {
+  useEffect( () => { if( isInitialized ) {
       connectWS(setWsConnected); 
     }
-      else console.log("WS-Config not loaded yet or not initialized");
-  }, [isConfigLoaded, isInitialized]);
+      else console.log("WS-Config not initialized");
+  }, [isInitialized]);
 
   // Auto login
   useEffect( () => { if( isWsConnected && isInitialized ) {

@@ -4,20 +4,31 @@ import { handleUserRegister,
 import { sendWsMessage } from './webSocket.ts'
 import type { Dispatch, SetStateAction } from "react";
 
-const currentEnv = import.meta.env.VITE_ENV as string;
-export let URL_BACKEND_HTTP = "";
-export let URL_BACKEND_WS = ""; 
+export const URL_BACKEND_HTTP =
+  window.__ENV__?.BACKEND_HTTP_URL || getDefaultHttpUrl();
 
+export const URL_BACKEND_WS =
+  window.__ENV__?.BACKEND_WS_URL || getDefaultWsUrl();
 
-function getHttpUrl(): string {
-  const { protocol, hostname } = window.location;
-  return `${protocol}//${hostname}`;
+declare global {
+  interface Window {
+    __ENV__?: {
+      BACKEND_HTTP_URL?: string;
+      BACKEND_WS_URL?: string;
+    };
+  }
 }
 
-function getWebSocketUrl(): string {
+function getDefaultHttpUrl(): string {
+  const { protocol, host } = window.location;
+  return `${protocol}//${host}`;
+}
+
+function getDefaultWsUrl(): string {
   const WS_PROTOCOL = window.location.protocol === "https:" ? "wss" : "ws";
   return `${WS_PROTOCOL}://${window.location.host}/websocket`;  
 }
+// ------------------------------------------------------------------
 
 export async function reconnectApp(){
   console.log("Reconnecting...");
@@ -33,34 +44,6 @@ export async function disconnectApp(
 }
 
 
-
-export async function loadConfig(
-  setConfigLoaded:  Dispatch<SetStateAction<boolean>> ) {
-    try {
-        const response = await fetch('/clientsettings.json'); // public dir, level index.html
-        if (!response.ok) {
-          throw new Error('Failed to fetch configuration');
-        }
-        const config = await response.json();
-        console.log('Loaded config:', config);
-        console.log('*** Current running Environment:', currentEnv, '***');
-
-        if( currentEnv == "Development"){
-          URL_BACKEND_HTTP = config.urlBackend[currentEnv].HTTP;
-          URL_BACKEND_WS = config.urlBackend[currentEnv].WS;
-        }
-        else { // Production
-          URL_BACKEND_HTTP = getHttpUrl();
-          URL_BACKEND_WS = getWebSocketUrl();
-        }
-        
-        console.log("URL_BACKEND_HTTP and URL_BACKEND_WS", URL_BACKEND_HTTP, URL_BACKEND_WS);
-
-        setConfigLoaded(true); // Mark configuration as loaded
-    } catch (error) {
-      console.error('Error loading configuration:', error);
-    }
-}
 
 
 export async function getAllUsers(
