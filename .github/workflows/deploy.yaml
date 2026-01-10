@@ -49,6 +49,7 @@ jobs:
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "mkdir -p /var/www/chatapp/backend/"
           scp -P $SSH_PORT backend/target/chatappjn-0.0.1-SNAPSHOT.jar barry75@barryonweb.com:/var/www/chatapp/backend/
+          scp -P $SSH_PORT backend/startProd.sh barry75@barryonweb.com:/var/www/chatapp/backend/
 
       # Deploy application.yaml config
       - name: Deploy Spring config file
@@ -65,12 +66,6 @@ jobs:
             sudo cp /var/www/chatapp/nginx/chatapp-dev.barryonweb.com /etc/nginx/sites-available/ &&
             sudo ln -sf /etc/nginx/sites-available/chatapp-dev.barryonweb.com /etc/nginx/sites-enabled/ &&
             sudo nginx -t && sudo systemctl reload nginx"
-
-      # Copy service file, reload cfg and restart backend 
-      - name: Restart backend service
-        run: |
-          scp -P $SSH_PORT backend/chatappjn.service barry75@barryonweb.com:/etc/systemd/system/
-          ssh -p $SSH_PORT barry75@barryonweb.com "sudo systemctl restart chatappjn.service"
 
       # See logs after restart
       - name: Show backend logs
