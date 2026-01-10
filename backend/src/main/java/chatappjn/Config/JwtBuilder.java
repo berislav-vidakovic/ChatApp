@@ -8,8 +8,21 @@ import java.util.Date;
 import java.util.List;
 
 public class JwtBuilder {
-  private static final Key SECRET_KEY = Keys.hmacShaKeyFor("KeyForJWTauthenticationInChatApp".getBytes());
   private static final long EXPIRATION_TIME_MS = 60*60*1000; // 1 hour
+
+  private static final String SECRET =
+            System.getenv("JWT_SECRET");  //  env var
+
+  private static final Key SECRET_KEY;
+
+  static {
+    if (SECRET == null || SECRET.length() < 32) {
+        throw new IllegalStateException(
+            "JWT_SECRET env variable is missing or too short (min 32 chars)"
+        );
+    }
+    SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
+  }
 
   public static Key getSecretKey() {
       return SECRET_KEY;
