@@ -94,5 +94,21 @@ So Docker replaces:
 - Reverse proxy WebSocket connections (/websocket) to backend container
 - Terminate HTTPS for chatapp-docker.barryonweb.com
 
+```
+Internet
+   ↓
+Host Nginx (port 80)
+   ↓ proxy_pass
+Docker Nginx (frontend container)
+   ↓
+Spring Boot backend container
+   ↓
+MongoDB container
+```
 
+✔ Host nginx owns port 80  
+✔ Docker frontend is exposed internally (8090 → 80)  
+✔ Backend reachable through Docker network  
+✔ Mongo isolated in container volume  
+✔ API routing works through domain → nginx → docker → backend  
 

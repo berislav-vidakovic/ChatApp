@@ -1,30 +1,50 @@
 server {
+  server_name chatapp-docker.barryonweb.com;
+
+  # Proxy all API requests to Spring Boot backend (port 8081)
+  location /api/ {
+    proxy_pass http://127.0.0.1:8090;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  #  WebSocket support
+  location /websocket {
+    proxy_pass http://127.0.0.1:8090;
+
+    # REQUIRED for WebSockets
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+
+    # Pass client info headers
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    # Websocket timeout (default is 60s)
+    proxy_read_timeout 3600;
+    proxy_send_timeout 3600;
+    proxy_connect_timeout 3600;
+  }
+
+
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/chatapp-docker.barryonweb.com/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/chatapp-docker.barryonweb.com/privkey.pem; # managed by Certbot
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = chatapp-docker.barryonweb.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+  server_name chatapp-docker.barryonweb.com;
     listen 80;
-    server_name chatapp-docker.barryonweb.com;
-
-    root /usr/share/nginx/html;
-    index index.html;
-
-    # Serve React frontend
-    location / {
-        try_files $uri /index.html;
-    }
-
-    # Proxy API requests to backend
-    location /api/ {
-        proxy_pass http://backend:8081/api/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-    }
-
-    # Proxy WebSocket connections
-    location /websocket/ {
-        proxy_pass http://backend:8081/websocket/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_set_header Host $host;
-    }
+    return 404; # managed by Certbot
 }

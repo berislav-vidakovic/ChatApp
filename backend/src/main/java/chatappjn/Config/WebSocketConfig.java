@@ -19,7 +19,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(webSocketHandler, "/websocket")
                 .setAllowedOrigins("http://localhost:5177", // Dev
                                    "https://chatapp-dev.barryonweb.com", // Prod
-                                   "https://chatapp-test.barryonweb.com"
+                                   "https://chatapp-test.barryonweb.com",
+                                   "https://chatapp-docker.barryonweb.com"
                                   ); 
     }
 }
