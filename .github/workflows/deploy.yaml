@@ -169,6 +169,6 @@ jobs:
           scp -P $SSH_PORT frontend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/frontend/
           scp -P $SSH_PORT backend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/backend/
           scp -P $SSH_PORT ./docker-compose.yml  barry75@barryonweb.com:/var/www/chatapp/
-          scp -P $SSH_PORT nginx/chatapp-docker.conf  barry75@barryonweb.com:/var/www/chatapp/nginx/
+          scp -P $SSH_PORT ./rebuildAppContainer  barry75@barryonweb.com:/var/www/chatapp/
 
   

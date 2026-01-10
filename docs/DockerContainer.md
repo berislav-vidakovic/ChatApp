@@ -77,6 +77,8 @@
 - Add as allowed origin https://chatapp-docker.barryonweb.com to
   - WebSocket Config
   - Cors Config
+- Add .env.docker
+  - backend container runs on port 8081 internally, 8090 externally
 
 ## Nginx container responsibilities
 
@@ -96,3 +98,6 @@
   ```docker
   docker exec -it chatapp-backend cat .env
   ```
+
+## Isolate MongoDB clone db
+- Add env.docker

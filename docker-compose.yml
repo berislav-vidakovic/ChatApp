@@ -19,13 +19,17 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./backend/.env
+      - ./backend/.env.docker
   mongo:
     image: mongo:6
     container_name: chatapp-mongo
     restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dockeruser
+      MONGO_INITDB_ROOT_PASSWORD: dockerpass
+      MONGO_INITDB_DATABASE: chatapp_dev
     volumes:
       - mongo-data:/data/db
-
+      - ./mongo-dump:/chatapp_dump:ro
 volumes:
   mongo-data:
