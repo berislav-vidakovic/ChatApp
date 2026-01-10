@@ -77,11 +77,6 @@ jobs:
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "journalctl -u chatappjn.service -n 50 --no-pager"
 
-      # Copy Dockerfile and script to recreate Test environment container 
-      - name: Containerize backend Test environment 
-        run: |
-          scp -P $SSH_PORT backend/Dockerfile barry75@barryonweb.com:/var/www/chatapp/backend/
-          scp -P $SSH_PORT ./runTestContainer.sh barry75@barryonweb.com:/var/www/chatapp/backend/
 
   frontend-build-and-deploy: # ------------- frontend deployment -------------
     runs-on: ubuntu-latest
@@ -124,8 +119,19 @@ jobs:
 
             # Copy Dockerfile and script to recreate Test environment container 
 
-      # Copy Dockerfile and script to recreate Test environment container 
+
+  test-env-containerization: # ----test environment Docker container ---------
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Copy Dockerfiles and script to recreate Test environment container 
       - name: Containerize frontend Test environment 
         run: |
           scp -P $SSH_PORT frontend/Dockerfile barry75@barryonweb.com:/var/www/chatapp/frontend/
-          scp -P $SSH_PORT ./runFrontedTestCnt.sh barry75@barryonweb.com:/var/www/chatapp/frontend/
+          scp -P $SSH_PORT backend/Dockerfile barry75@barryonweb.com:/var/www/chatapp/backend/
+          scp -P $SSH_PORT ./runTestContainer.sh barry75@barryonweb.com:/var/www/chatapp/
+  
