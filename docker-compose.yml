@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: chatapp-mongo
+    environment:
+      MONGO_INITDB_DATABASE: chatapp_dev
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - chatapp
+
+  backend:
+    build: ./backend/Dockerfile.prod
+    env_file: ./backend/.env
+    depends_on:
+      - mongo
+    networks:
+      - chatapp
+
+  frontend:
+    build: ./frontend/Dockerfile.prod
+    depends_on:
+      - backend
+    networks:
+      - chatapp
+    # No need to expose port, Nginx will serve HTTP
+
+volumes:
+  mongo-data:
+
+networks:
+  chatapp:
+    driver: bridge

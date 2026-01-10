@@ -45,15 +45,32 @@
 
 ## Environment variables - backend
 
-- update application.yaml
-- Create .env for local run and run app locally:
+- update application.yaml - enable env. vars injection
+- Create .env for local run and script to run app locally
+- Create .env on VPS
+- Add script to run independently on systemd
   ```bash
+  #!/bin/bash
   set -a
-  source .env
+  source /var/www/chatapp/backend/.env
   set +a
-  java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
+  java -jar /var/www/chatapp/backend/chatappjn-0.0.1-SNAPSHOT.jar
+  ```
+- Create .env.template  (include in  git commmit)
+- Create service.env to be used by systemd service
+- Update service file to use secrets from service.env
+  ```bash
+  [Service]
+  EnvironmentFile=/var/www/chatapp/backend/service.env
   ```
 
+
+##  Docker networking
+
+- All containers are on one Docker network, e.g., chatapp
+- Nginx talks to backend at backend:8081
+- Backend talks to Mongo at mongo:27017
+- No container exposes sensitive ports to the internet except Nginx (80/443).
 
 ## Backend
 
@@ -69,6 +86,13 @@ So Docker replaces:
 - Java install
 - systemd service
 - manual JAR handling
+
+## Nginx container responsibilities
+
+- Serve frontend static files (React build)
+- Reverse proxy API calls (/api) to backend container
+- Reverse proxy WebSocket connections (/websocket) to backend container
+- Terminate HTTPS for chatapp-docker.barryonweb.com
 
 
 

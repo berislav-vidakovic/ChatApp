@@ -1,0 +1,18 @@
+# Use official OpenJDK
+FROM openjdk:17-jdk-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy JAR and env template
+COPY target/chatappjn-0.0.1-SNAPSHOT.jar app.jar
+COPY .env .env
+
+# Expose backend port
+EXPOSE 8081
+
+# Use environment variables from Docker
+ENV JAVA_OPTS="-Xms256m -Xmx512m"
+
+# Start the app
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
