@@ -1,17 +1,22 @@
 spring:
   application:
     name: chatappjn
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default}
+
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://barry75:abc123@barryonweb.com:27017/chatapp_dev}
-      database: ${MONGO_DB:chatapp_dev}    
-server:
-  port: 8081
-websocket:
-  timeout-mins: 20
-  check-interval-sec: 45
-useridle:
-  timeout-mins: 10
-  check-interval-sec: 45
+      uri: ${MONGO_URI}
+      database: ${MONGO_DB}
 
-  
+server:
+  port: ${SERVER_PORT:8081}
+
+websocket:
+  timeout-mins: ${WS_TIMEOUT_MINS:20}
+  check-interval-sec: ${WS_CHECK_INTERVAL_SEC:45}
+
+useridle:
+  timeout-mins: ${USER_IDLE_TIMEOUT_MINS:10}
+  check-interval-sec: ${USER_IDLE_CHECK_INTERVAL_SEC:45}

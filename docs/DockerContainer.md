@@ -2,7 +2,7 @@
 
 # ChatApp - Containerization with Docker
 
-## Environment variables
+## Environment variables - frontend
 
 - Backend URL
   - Local Dev
@@ -12,6 +12,10 @@
         server: { 
           port: 5177, // frontend 
           proxy: { // backend
+            '/api': {
+              target: 'http://localhost:8081',
+              changeOrigin: true,
+            },
             '/websocket': {
               target: 'ws://localhost:8081',
               ws: true,
@@ -39,6 +43,16 @@
         window.__ENV__?.BACKEND_HTTP_URL || getDefaultHttpUrl();
       ```
 
+## Environment variables - backend
+
+- update application.yaml
+- Create .env for local run and run app locally:
+  ```bash
+  set -a
+  source .env
+  set +a
+  java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
+  ```
 
 
 ## Backend
