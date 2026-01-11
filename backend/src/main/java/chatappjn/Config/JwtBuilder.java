@@ -15,7 +15,7 @@ public class JwtBuilder {
 
   private static final Key SECRET_KEY;
 
-  static {
+  static { // Static initialization block 
     if (SECRET == null || SECRET.length() < 32) {
         throw new IllegalStateException(
             "JWT_SECRET env variable is missing or too short (min 32 chars)"
@@ -23,6 +23,7 @@ public class JwtBuilder {
     }
     SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
   }
+
 
   public static Key getSecretKey() {
       return SECRET_KEY;

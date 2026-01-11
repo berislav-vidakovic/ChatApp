@@ -9,16 +9,6 @@ MONGO_DUMP_DIR=/var/www/chatapp/data/mongo-dump  # host path to mongodump
 MONGO_DUMP_DB=chatapp_dev  # Database to dump
 MONGO_CONTAINER_DUMP_PATH=/chatapp_dump      # path inside container
 
-# Load Mongo credentials
-if [ -f data/.env.mongo ]; then
-  set -a          # automatically export variables
-  source data/.env.mongo
-  set +a
-else
-  echo ".env.mongo file not found"
-  exit 1
-fi
-
 echo "Rebuilding full stack containers..."
 
 # --- Stop containers if running ---
@@ -35,10 +25,7 @@ echo "Waiting for Mongo to initialize..."
 sleep 10
 
 # --- Dump MongoDB database
-echo "Dumping database...."
-sudo rm -rf /var/www/chatapp/data/mongo-dump/$MONGO_DUMP_DB
-sudo mongodump --uri="mongodb://${MONGO_USER}:${MONGO_PWD}@barryonweb.com:27017/$MONGO_DUMP_DB" --out=$MONGO_DUMP_DIR
-
+./dumpMongoDbDev.sh
 
 # --- Restore production DB into containerized Mongo ---
 if [ -d "$MONGO_DUMP_DIR/chatapp_dev" ]; then

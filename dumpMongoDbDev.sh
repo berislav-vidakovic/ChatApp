@@ -14,7 +14,6 @@ else
   exit 1
 fi
 
-
-echo "Dumping database...."
+echo "Dumping database $MONGO_DUMP_DB...."
 sudo rm -rf /var/www/chatapp/data/mongo-dump/$MONGO_DUMP_DB
 sudo mongodump --uri="mongodb://${MONGO_USER}:${MONGO_PWD}@barryonweb.com:27017/$MONGO_DUMP_DB" --out=$MONGO_DUMP_DIR

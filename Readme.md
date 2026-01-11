@@ -70,6 +70,11 @@ There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="h
 - GitHub Actions (CI/CD)
 - Linux (systemd, SSH)
 
+### Configuration & Secrets
+
+- All sensitive values (DB credentials, JWT secrets, API keys) are externalized via environment variables and are not committed to the repository
+- Example configuration is provided in .env.template
+
 View complete <a href="docs/VersionHistory.md"> version history</a>
 
 ---

@@ -165,7 +165,7 @@ jobs:
           scp -P $SSH_PORT frontend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/frontend/
           scp -P $SSH_PORT backend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/backend/
           scp -P $SSH_PORT ./docker-compose.yml  barry75@barryonweb.com:/var/www/chatapp/
-          scp -P $SSH_PORT ./cloneMongoDbDev.sh  barry75@barryonweb.com:/var/www/chatapp/
+          scp -P $SSH_PORT ./dumpMongoDbDev.sh  barry75@barryonweb.com:/var/www/chatapp/
           scp -P $SSH_PORT ./rebuildAppContainer.sh  barry75@barryonweb.com:/var/www/chatapp/
 
   
