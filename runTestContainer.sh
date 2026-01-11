@@ -13,16 +13,12 @@ docker build -t chatapp-backend-test ./backend/
 docker run -d \
   --name chatapp-backend-test \
   -p 8085:8080 \
-  -e MONGO_URI="mongodb://barry75:abc123@barryonweb.com:27017/chatapp_test" \
-  -e MONGO_DB="chatapp_test" \
-  -e SPRING_PROFILES_ACTIVE="prod" \
+  --env-file backend/.env.test \
   -e JAVA_OPTS="-Xms256m -Xmx512m" \
-  -e SPRING_SERVER_PORT=8080 \
   --restart unless-stopped \
-  chatapp-backend-test \
-  java -jar app.jar --server.port=8080
+  chatapp-backend-test
 
-echo "Container 'chatapp-backend-test' is running on Port 8085"
+echo "Backend Test Container 'chatapp-backend-test' is running on Port 8085"
 
 # --- Frontend container -------------------------------------------
 IMAGE_NAME=chatapp-frontend-test

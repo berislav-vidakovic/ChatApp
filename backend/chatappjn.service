@@ -3,7 +3,7 @@ Description=ChatAppJn Spring Boot Backend
 After=network.target
 
 [Service]
-EnvironmentFile=/var/www/chatapp/backend/.env
+EnvironmentFile=/var/www/chatapp/backend/.env.dev
 WorkingDirectory=/var/www/chatapp/backend
 ExecStart=/usr/bin/java $JAVA_OPTS -jar /var/www/chatapp/backend/chatappjn-0.0.1-SNAPSHOT.jar
 SuccessExitStatus=143

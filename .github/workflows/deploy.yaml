@@ -49,7 +49,8 @@ jobs:
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "mkdir -p /var/www/chatapp/backend/"
           scp -P $SSH_PORT backend/target/chatappjn-0.0.1-SNAPSHOT.jar barry75@barryonweb.com:/var/www/chatapp/backend/
-          scp -P $SSH_PORT backend/startProd.sh barry75@barryonweb.com:/var/www/chatapp/backend/
+          scp -P $SSH_PORT backend/restartProd.sh barry75@barryonweb.com:/var/www/chatapp/backend/
+          scp -P $SSH_PORT backend/stopProd.sh barry75@barryonweb.com:/var/www/chatapp/backend/
 
       # Deploy application.yaml config
       - name: Deploy Spring config file
@@ -57,17 +58,15 @@ jobs:
           ssh -p $SSH_PORT barry75@barryonweb.com "mkdir -p /var/www/chatapp/backend/config/"
           scp -P $SSH_PORT backend/src/main/resources/application.yaml barry75@barryonweb.com:/var/www/chatapp/backend/config/
       
-      # Deploy Nginx config and reload
+      # Copy Nginx config files 
       - name: Update Nginx config
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "mkdir -p /var/www/chatapp/nginx/"
-          scp -P $SSH_PORT chatapp-dev.barryonweb.com barry75@barryonweb.com:/var/www/chatapp/nginx/
-          ssh -p $SSH_PORT barry75@barryonweb.com "
-            sudo cp /var/www/chatapp/nginx/chatapp-dev.barryonweb.com /etc/nginx/sites-available/ &&
-            sudo ln -sf /etc/nginx/sites-available/chatapp-dev.barryonweb.com /etc/nginx/sites-enabled/ &&
-            sudo nginx -t && sudo systemctl reload nginx"
+          scp -P $SSH_PORT nginx/chatapp-dev.barryonweb.com barry75@barryonweb.com:/var/www/chatapp/nginx/
+          scp -P $SSH_PORT nginx/chatapp-test.barryonweb.com barry75@barryonweb.com:/var/www/chatapp/nginx/
+          scp -P $SSH_PORT nginx/chatapp-docker.barryonweb.com barry75@barryonweb.com:/var/www/chatapp/nginx/
 
-      # See logs after restart
+      # See logs after service restart
       - name: Show backend logs
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "journalctl -u chatappjn.service -n 50 --no-pager"
@@ -111,9 +110,6 @@ jobs:
         run: |
           ssh -p $SSH_PORT barry75@barryonweb.com "mkdir -p /var/www/chatapp/frontend"
           scp -P $SSH_PORT -r frontend/dist/* barry75@barryonweb.com:/var/www/chatapp/frontend/
-
-            # Copy Dockerfile and script to recreate Test environment container 
-
 
   test-env-containerization: # ----test environment Docker container ---------
     runs-on: ubuntu-latest
@@ -163,12 +159,13 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p $SSH_PORT barryonweb.com >> ~/.ssh/known_hosts
 
-      # Copy Dockerfiles, Docker compose and Nginx  
+      # Copy Dockerfiles, Docker compose build script
       - name: Containerize full stack App 
         run: |
           scp -P $SSH_PORT frontend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/frontend/
           scp -P $SSH_PORT backend/Dockerfile.prod barry75@barryonweb.com:/var/www/chatapp/backend/
           scp -P $SSH_PORT ./docker-compose.yml  barry75@barryonweb.com:/var/www/chatapp/
+          scp -P $SSH_PORT ./cloneMongoDbDev.sh  barry75@barryonweb.com:/var/www/chatapp/
           scp -P $SSH_PORT ./rebuildAppContainer.sh  barry75@barryonweb.com:/var/www/chatapp/
 
   

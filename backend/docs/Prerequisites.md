@@ -89,7 +89,7 @@
     ```bash
     mongosh
     use admin
-    db.createUser({ user: "dbadmin", pwd: "abc123", roles: [ { role: "root", db: "admin" } ] })
+    db.createUser({ user: "dbadmin", pwd: "StrongPwd!", roles: [ { role: "root", db: "admin" } ] })
     db.getUsers()
     exit
     ```
@@ -105,7 +105,7 @@
 9. Change password
 
     ```bash
-    db.updateUser( "dbadmin", { pwd: "abc123" } )
+    db.updateUser( "dbadmin", { pwd: "StrongPwd!" } )
     ```
 
 10. Make MongoDB available externally /etc/mongod.conf

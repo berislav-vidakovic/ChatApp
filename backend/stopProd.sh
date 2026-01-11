@@ -14,12 +14,3 @@ else
   echo "No running backend found."
 fi
 
-echo "Loading environment variables..."
-set -a
-source /var/www/chatapp/backend/.env
-set +a
-
-echo "Starting backend..."
-nohup java -jar "$JAR_PATH" > backend.log 2>&1 &
-
-echo "Backend started."

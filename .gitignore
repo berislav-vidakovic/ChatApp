@@ -22,4 +22,8 @@ frontend/.vite/
 
 # ===== Environment files =====
 .env
+.env.dev
+.env.test 
+.env.docker
+.env.mongo
 

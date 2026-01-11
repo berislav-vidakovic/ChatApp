@@ -7,7 +7,7 @@
 
   ```bash
   use chatappdb
-  db.createUser({ user: "barry75", pwd: "abc123", roles: [ { role: "readWrite", db: "chatappdb" } ] })
+  db.createUser({ user: "barry75", pwd: "StrongPwd!", roles: [ { role: "readWrite", db: "chatappdb" } ] })
   db.updateUser( "barry75", { roles: [ { role: "dbOwner", db: "chatappdb" } ] }  )
   show dbs
   ```

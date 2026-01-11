@@ -30,6 +30,6 @@ services:
       MONGO_INITDB_DATABASE: chatapp_dev
     volumes:
       - mongo-data:/data/db
-      - ./mongo-dump:/chatapp_dump:ro
+      - ./data/mongo-dump:/chatapp_dump:ro
 volumes:
   mongo-data:
