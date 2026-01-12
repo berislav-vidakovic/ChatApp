@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/bash  
+# SCRIPT: dumpMongoDbTest.sh
 set -e
 
 MONGO_DUMP_DIR=/var/www/chatapp/data/mongo-dump  # host path to mongodump
-MONGO_DUMP_DB=chatapp_dev  # Database to dump
+MONGO_DUMP_DB=chatapp_test  # Database to dump
 
 # Load Mongo credentials
 if [ -f data/.env.mongo ]; then
@@ -15,5 +16,6 @@ else
 fi
 
 echo "Dumping database $MONGO_DUMP_DB...."
-sudo rm -rf /var/www/chatapp/data/mongo-dump/$MONGO_DUMP_DB
-sudo mongodump --uri="mongodb://${MONGO_USER}:${MONGO_PWD}@barryonweb.com:27017/$MONGO_DUMP_DB" --out=$MONGO_DUMP_DIR
+sudo rm -rf $MONGO_DUMP_DIR/$MONGO_DUMP_DB
+sudo -E mongodump --uri="mongodb://${MONGO_USER}:${MONGO_PWD}@barryonweb.com:27017/$MONGO_DUMP_DB" --out="$MONGO_DUMP_DIR"
+

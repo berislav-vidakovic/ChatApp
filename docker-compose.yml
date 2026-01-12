@@ -27,7 +27,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: dockeruser
       MONGO_INITDB_ROOT_PASSWORD: dockerpass
-      MONGO_INITDB_DATABASE: chatapp_dev
     volumes:
       - mongo-data:/data/db
       - ./data/mongo-dump:/chatapp_dump:ro
