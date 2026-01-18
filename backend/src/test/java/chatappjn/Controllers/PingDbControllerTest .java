@@ -17,12 +17,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(
-    controllers = PingDbController.class,  // your controller class
+    controllers = PingDbController.class,  // controller class
     excludeAutoConfiguration = {
         org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
     }
 )
-@Import(Endpoints.class)  // <-- important: provides the missing bean
+@Import(Endpoints.class)  
 class PingDbControllerTest {
 
     @Autowired

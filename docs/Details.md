@@ -81,8 +81,6 @@
 ### 3. Containerize frontend
 
 - Add Dockerfile
-  ```docker
-  ```
 
 - Update Nginx config file 
   - Old setup (common  frontend section for dev and test):

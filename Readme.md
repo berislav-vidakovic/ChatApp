@@ -17,17 +17,16 @@ It demonstrates modern backend and frontend development practices including REST
 
 This project is designed as a **portfolio project** to showcase real-world engineering skills and production-ready architecture.
 
-There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="https://chatapp-test.barryonweb.com/">this project</a>
 
 ---
 
 ## 📑 Table of Contents
 
-- [🚀 Features](#features)
+- [🚀 Features / Live Demo](#features--live-demo)
 - [🧰 Tech Stack](#tech-stack)
 - [📁 Project Structure](#project-structure)
 - [🛠️ Local Development](#local-development)
-- [🐳 Docker (Test Environment)](#docker-test-environment)
+- [🐳 Docker containers](#docker-containers)
 - [⚙️ Environment Variables](#environment-variables)
 - [🌐 NGINX Reverse Proxy](#nginx-reverse-proxy)
 - [🔁 CI/CD](#cicd)
@@ -37,7 +36,7 @@ There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="h
 
 ---
 
-## Features
+## Features / Live Demo
 
 - Real-time messaging using **WebSockets**
 - RESTful API for users, chats, and messages
@@ -46,7 +45,21 @@ There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="h
 - MongoDB persistence
 - Docker support
 - NGINX reverse proxy configuration
-- GitHub Actions CI/CD pipelines
+- GitHub & GitLab Actions CI/CD pipelines
+
+
+> 🔗 Demo: https://chatapp-test.barryonweb.com/ 
+
+- To test full functionality open 2 browsers and login with 2 different users 
+- Either register new users or use existing ones all having password abc  
+- Basic role enables sending messages, no new chat, no user admin
+- Prime role is required to create new chat
+- Admin role is required for user role management 
+
+
+📸 Screenshot of ChatApp in action:
+
+![ChatApp Screenshot](/docs/images/chatapp.png "Chat App in action")
 
 ---
 
@@ -58,16 +71,20 @@ There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="h
 - Spring Web / WebSocket
 - MongoDB (more details in  <a href="docs/Details.md">separate document</a> )
 - JWT Authentication
+- There are more details in  <a href="backend/Readme.md">separate document</a> )
 
-### Frontend
-- React
+
+### Frontend 
+- React 
 - TypeScript
 - Vite
+- There are more details in  <a href="frontend/README.md">separate document</a> )
+
 
 ### Infrastructure & DevOps
 - Docker containerization
 - NGINX
-- GitHub Actions (CI/CD)
+- GitHub & GitLab Actions (CI/CD)
 - Linux (systemd, SSH)
 
 ### Configuration & Secrets
@@ -75,7 +92,6 @@ There is <a href="docs/UserGuide.md">User Guide</a> available to test <a href="h
 - All sensitive values (DB credentials, JWT secrets, API keys) are externalized via environment variables and are not committed to the repository
 - Example configuration is provided in .env.template
 
-View complete <a href="docs/VersionHistory.md"> version history</a>
 
 ---
 
@@ -83,11 +99,15 @@ View complete <a href="docs/VersionHistory.md"> version history</a>
 
 ```text
 /
-├── backend/                    # Spring Boot backend
-├── frontend/                   # React frontend
-├── runTestContainer.sh         # Helper script for container recreation
-├── chatapp-test.barryonweb.com # NGINX config for Test environment
-├── chatapp-dev.barryonweb.com  # NGINX config for Dev environment
+├── backend/                            # Spring Boot backend
+├── frontend/                           # React frontend
+├── nginx/                              # NGINX configs for Dev, Test and Prod environments
+├── docs/                               # Project documentation
+├── runTestContainer.sh                 # Bash script for test container recreation
+├── docker-compose.yml                  # Docker compose for production container recreation
+├── rebuildAppContainer.sh              # Bash script to run Docker compose and restore DB
+├── .github/workflows/                  # GitHub CI/CD pipelines 
+├── .gitlab.yml                         # GitLab CI/CD pipeline 
 └── Readme.md
 ```
 
@@ -98,15 +118,14 @@ View complete <a href="docs/VersionHistory.md"> version history</a>
 ### Backend
 
 ```bash
-cd backend
 mvn clean package -DskipTests
+set -a
+source .env
+set +a
 java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
 ```
 
-Default backend port:
-```
-http://localhost:8081
-```
+- Env. variables including backend Port are defined in .env (included in .gitgnore) 
 
 ---
 
@@ -120,26 +139,34 @@ npm run build
 
 ---
 
-## Docker (Test Environment)
+## Docker containers
 
-### Run script to Build Image and run Docker container
+### Build Image and run Frontend and Backend Docker containers connected to Host DB (Test)
 
 ```bash
 ./runTestContainer.sh
 ```
 
-There is a <a href="docs/Details.md">separate document</a> with more details on Docker containerization.
+### Build Image and run Frontend, Backend and MongoDb Docker containers  (Prod)
+
+
+```bash
+./rebuildAppContainer.sh
+```
+
+There is a <a href="docs/DockerContainer.md">separate document</a> with more details on Docker containerization.
 
 ---
 
 ## Environment Variables
 
 ```yaml
-MONGO_URI=mongodb://user:password@host:27017/chatapp_test
-MONGO_DB=chatapp_test
-SPRING_PROFILES_ACTIVE=prod
-JAVA_OPTS="-Xms256m -Xmx512m"
-SPRING_SERVER_PORT=8080
+# .env
+MONGO_URI
+MONGO_DB
+SPRING_PROFILES_ACTIVE
+SERVER_PORT
+JWT_SECRET
 ```
 
 ---
@@ -165,7 +192,7 @@ location /websocket {
 
 ## CI/CD
 
-The project includes **GitHub Actions workflows** for automated build and deployment of backend and frontend services.
+The project includes **GitHub & GitLab Actions workflows**  for automated build and deployment of backend and frontend services.
 
 ---
 

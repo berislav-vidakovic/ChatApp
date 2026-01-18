@@ -1,5 +1,6 @@
-# Java backend with MongoDb, CI/CD and Nginx 
+<a href="../Readme.md">Home</a>
 
+# Java backend with MongoDb, CI/CD and Nginx 
 
 
 <div style="margin-bottom: 12px;">
@@ -28,6 +29,7 @@
 11. [MongoDB collections messages and chats](#11-mongodb-collections-messages-and-chats)
 12. [Sending Ws message](#12-sending-ws-message)
 13. [Introducing Role-Based Access Control (RBAC)](#13-introducing-role-based-access-control-rbac)
+14. [Adding support for connect frontend in Production](#14-adding-support-for-connect-frontend-in-production)
 
    
 

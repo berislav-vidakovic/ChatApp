@@ -1,4 +1,6 @@
-## JWT Authentication incremental build
+<a href="../Readme.md">Home</a>
+
+## Frontend JWT Authentication incremental build
 
 ### Table of Contents
 
@@ -340,6 +342,9 @@ Frontend protected endpoint Request workflow
               - name: Test SSH connection
                 run: ssh -o StrictHostKeyChecking=no barry75@barryonweb.com "echo Connected successfully from GitHub!"
         ```
-  - Create deploy.yaml file
+  - Create CI pipeline
+    - GitHub: .github/workflows/deploy.yaml
+    - GitLab: .gitlab-ci.yml
+
 
 

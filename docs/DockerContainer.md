@@ -99,5 +99,5 @@
   docker exec -it chatapp-backend cat .env
   ```
 
-## Isolate MongoDB clone db
+## Isolate MongoDB dump db
 - Add env.docker
