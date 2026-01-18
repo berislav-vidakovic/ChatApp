@@ -31,22 +31,16 @@ backend-build-and-deploy:
     - mvn clean package -DskipTests  # Build backend 
 
     - ssh -i ~/.ssh/gitlab_cicd  -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "mkdir -p /var/www/chatapp/backend/"
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT target/chatappjn-0.0.1-SNAPSHOT.jar \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT restartProd.sh stopProd.sh \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT target/chatappjn-0.0.1-SNAPSHOT.jar $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT restartProd.sh stopProd.sh $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
 
-    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST \
-        "mkdir -p /var/www/chatapp/backend/config/"
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT src/main/resources/application.yaml \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/config/
+    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "mkdir -p /var/www/chatapp/backend/config/"
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT src/main/resources/application.yaml $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/config/
 
     - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "mkdir -p /var/www/chatapp/nginx/"
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT ../nginx/* \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/nginx/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT ../nginx/* $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/nginx/
 
-    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST \
-        "journalctl -u chatappjn.service -n 50 --no-pager"
+    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "journalctl -u chatappjn.service -n 50 --no-pager"
 
 # ---------------- frontend deployment ----------------
 frontend-build-and-deploy:
@@ -60,10 +54,8 @@ frontend-build-and-deploy:
     - npm install
     - npm run build
 
-    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST \
-        "mkdir -p /var/www/chatapp/frontend"
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT -r dist/* \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/frontend/
+    - ssh -i ~/.ssh/gitlab_cicd -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "mkdir -p /var/www/chatapp/frontend"
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT -r dist/* $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/frontend/
 
 # --------- test environment Docker container ----------------------
 test-env-containerization:
@@ -73,12 +65,9 @@ test-env-containerization:
     - if: '$CI_COMMIT_BRANCH == "main"'
   extends: .default_ssh
   script:
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT frontend/Dockerfile \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/frontend/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT backend/Dockerfile \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT runTestContainer.sh \
-        $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT frontend/Dockerfile $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/frontend/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT backend/Dockerfile $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
+    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT runTestContainer.sh $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/
 
 # -------- Full stack App- Docker container ---------------- 
 app-containerization:
@@ -88,11 +77,15 @@ app-containerization:
     - if: '$CI_COMMIT_BRANCH == "main"'
   extends: .default_ssh
   script:
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT frontend/Dockerfile.prod \
+    - | 
+      scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT frontend/Dockerfile.prod \
         $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/frontend/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT backend/Dockerfile.prod \
+    - | 
+      scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT backend/Dockerfile.prod \
         $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/backend/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT docker-compose.yml \
+    - | 
+      scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT docker-compose.yml \
         $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/
-    - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT dumpMongoDbTest.sh rebuildAppContainer.sh \
+    - | 
+      scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT dumpMongoDbTest.sh rebuildAppContainer.sh \
         $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/
