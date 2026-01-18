@@ -27,7 +27,8 @@ backend-build-and-deploy:
   extends: .default_ssh
   script:
     - cd backend
-    - mvn clean package -DskipTests
+    - mvn test # Run unit tests
+    - mvn clean package -DskipTests  # Build backend
 
     - ssh -p $SSH_PORT $DEPLOY_USER@$DEPLOY_HOST "mkdir -p /var/www/chatapp/backend/"
     - scp -P $SSH_PORT target/chatappjn-0.0.1-SNAPSHOT.jar \

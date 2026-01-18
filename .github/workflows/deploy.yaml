@@ -25,6 +25,12 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
+      
+      # Run backend unit tests
+      - name: Run backend unit tests
+        run: |
+          cd backend
+          mvn test
 
       # Build backend
       - name: Build backend

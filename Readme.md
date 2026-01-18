@@ -50,11 +50,12 @@ This project is designed as a **portfolio project** to showcase real-world engin
 
 > 🔗 Demo: https://chatapp-test.barryonweb.com/ 
 
-- To test full functionality open 2 browsers and login with 2 different users 
-- Either register new users or use existing ones all having password abc  
-- Basic role enables sending messages, no new chat, no user admin
-- Prime role is required to create new chat
-- Admin role is required for user role management 
+- Test instructions:
+  - To test full functionality open 2 browsers and login with 2 different users 
+  - Either register new users or use existing ones all having password abc  
+  - Basic role enables sending messages, no new chat, no user admin
+  - Prime role is required to create new chat
+  - Admin role is required for user role management 
 
 
 📸 Screenshot of ChatApp in action:
@@ -117,15 +118,22 @@ This project is designed as a **portfolio project** to showcase real-world engin
 
 ### Backend
 
-```bash
-mvn clean package -DskipTests
-set -a
-source .env
-set +a
-java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
-```
+- Run backend unit tests 
+  ```bash
+  mvn test
+  ```
 
-- Env. variables including backend Port are defined in .env (included in .gitgnore) 
+- Build and run backend
+  ```bash
+  mvn clean package -DskipTests
+  set -a
+  source .env
+  set +a
+  java -jar target/chatappjn-0.0.1-SNAPSHOT.jar
+  ```
+
+  - There is bash script startLocalDev.sh to run local backend
+  - Env. variables including backend Port are defined in .env file (included in .gitgnore) 
 
 ---
 
