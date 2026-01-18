@@ -80,7 +80,7 @@ test-env-containerization:
     - scp -i ~/.ssh/gitlab_cicd  -P $SSH_PORT runTestContainer.sh \
         $DEPLOY_USER@$DEPLOY_HOST:/var/www/chatapp/
 
-# -------- Full stack App- Docker container ----------------
+# -------- Full stack App- Docker container ---------------- 
 app-containerization:
   stage: app-container
   image: ubuntu:22.04
